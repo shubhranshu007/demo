@@ -1,20 +1,19 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20-alpine
+# Use an official Python runtime as a base image
+FROM python:3.11-slim
 
-# Set the working directory
-WORKDIR /usr/src/app
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Copy package.json and package-lock.json first (for caching dependencies)
-COPY package*.json ./
+# Set working directory inside container
+WORKDIR /app
 
 # Install dependencies
-RUN npm install --production
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application source code
+# Copy project files into the container
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 3000
-
-# Run the application
-CMD ["node", "server.js"]
+# Run the Python application (change this as per your app entry point)
+CMD ["python", "app.py"]
